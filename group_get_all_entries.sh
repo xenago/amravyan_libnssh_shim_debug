@@ -11,10 +11,16 @@ while getopts "g:n:" opt; do
     g)
       uid=$OPTARG
       name=$(find /home -maxdepth 1 -type d -uid $uid | head -1 | cut -d "/" -f 3)
+      if [[ -z $name ]]; then
+        exit 1
+      fi
       echo "$name:x:$uid:"
       ;;
     n)
       name=$OPTARG
+      if [ ! -f /home/$name ]; then
+        exit 1
+      fi
       uid=$(stat -c %u /home/$name 2>/dev/null)
       if [[ -z $uid ]]; then
           uid=$(stat -c %u /home/* | sort | tail -1 | awk '{print $1+1;}')
