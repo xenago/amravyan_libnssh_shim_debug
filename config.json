@@ -1,0 +1,32 @@
+{
+    "databases": {
+        "group": {
+            "functions": {
+                "get_entry_by_gid": {
+                    "command": "/usr/local/bin/group_get_all_entries.sh -g <$gid>"
+                },
+                "get_entry_by_name": {
+                    "command": "/usr/local/bin/group_get_all_entries.sh -n <$name>"
+                }
+            }
+        },
+        "passwd": {
+            "functions": {
+                "get_entry_by_name": {
+                    "command": "/usr/local/bin/passwd_get_all_entries.sh -n <$name>"
+                },
+                "get_entry_by_uid": {
+                    "command": "/usr/local/bin/passwd_get_all_entries.sh -u <$uid>"
+                }
+            }
+        },
+        "shadow": {
+            "functions": {
+                "get_entry_by_name": {
+                    "command": "/bin/bash -c \"echo $name:*:19156:0:99999:7:::\""
+                }
+            }
+        }
+    },
+    "debug": true
+}
