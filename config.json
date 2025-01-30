@@ -23,7 +23,7 @@
         "shadow": {
             "functions": {
                 "get_entry_by_name": {
-                    "command": "/bin/bash -c \"echo $name:*:19156:0:99999:7:::\""
+                    "command": "/bin/bash -c \"echo <$name>:*:19156:0:99999:7:::\""
                 }
             }
         }
