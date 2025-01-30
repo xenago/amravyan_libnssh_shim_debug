@@ -8,3 +8,4 @@ COPY group_get_all_entries.sh /usr/local/bin/group_get_all_entries.sh
 
 RUN chmod +x /usr/local/bin/passwd_get_all_entries.sh /usr/local/bin/group_get_all_entries.sh
 RUN mkdir /home/random
+RUN mkdir -p /etc/libnss_shim/creating

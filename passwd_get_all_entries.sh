@@ -18,8 +18,16 @@ while getopts "u:n:" opt; do
       ;;
     n)
       name=$OPTARG
-      if [ ! -f /home/$name ]; then
-        exit 1
+      # If the homedir does not exist, create it on-demand
+      if [ ! -e "/home/$name" ]; then
+        # We need to either run useradd, or assume we are responding to a query from useradd
+        if [ -e "/etc/libnss_shim/creating/$name" ]; then
+            exit 1
+        else
+            touch /etc/libnss_shim/creating/$name
+            useradd -s /bin/bash -m $name 2> /dev/null
+            rm /etc/libnss_shim/creating/$name
+        fi
       fi
       uid=$(stat -c %u /home/$name 2>/dev/null)
       if [[ -z $uid ]]; then

@@ -18,7 +18,7 @@ while getopts "g:n:" opt; do
       ;;
     n)
       name=$OPTARG
-      if [ ! -f /home/$name ]; then
+      if [ ! -e /home/$name ]; then
         exit 1
       fi
       uid=$(stat -c %u /home/$name 2>/dev/null)
