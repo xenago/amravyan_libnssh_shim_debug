@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit on first failure
+set -e
+
 # https://serverfault.com/questions/1122226/user-account-auto-creation-using-ssh-certificate-authentication
 
 if [ $# -eq 0 ]; then
@@ -18,7 +21,7 @@ while getopts "g:n:" opt; do
       ;;
     n)
       name=$OPTARG
-      if [ ! -e /home/$name ]; then
+      if [[ ! -e /home/$name ]]; then
         exit 1
       fi
       uid=$(stat -c %u /home/$name 2>/dev/null)

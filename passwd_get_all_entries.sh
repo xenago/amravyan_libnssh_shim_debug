@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit on first failure
+set -e
+
 # https://serverfault.com/questions/1122226/user-account-auto-creation-using-ssh-certificate-authentication
 
 if [ $# -eq 0 ]; then
@@ -19,17 +22,26 @@ while getopts "u:n:" opt; do
     n)
       name=$OPTARG
       # If the homedir does not exist, create it on-demand
-      if [ ! -e "/home/$name" ]; then
+      if [[ ! -e /home/$name ]]; then
         # We need to either run useradd, or assume we are responding to a query from useradd
-        if [ -e "/etc/libnss_shim/creating/$name" ]; then
-            exit 1
+        if [[ -e /etc/libnss_shim/creating/$name ]]; then
+            exit 0
         else
-            touch /etc/libnss_shim/creating/$name
-            useradd -s /bin/bash -m $name 2> /dev/null
-            rm /etc/libnss_shim/creating/$name
+            touch "/etc/libnss_shim/creating/$name"
+            if [[ ! $? -eq 0 ]]; then
+                exit 1
+            fi
+            useradd -s /bin/bash -m "$name"
+            if [[ ! $? -eq 0 ]]; then
+                bad_creation=1
+            fi
+            rm "/etc/libnss_shim/creating/$name"
+            if [[ $bad_creation ]]; then
+                exit 1
+            fi
         fi
       fi
-      uid=$(stat -c %u /home/$name 2>/dev/null)
+      uid=$(stat -c %u "/home/$name" 2>/dev/null)
       if [[ -z $uid ]]; then
           uid=$(stat -c %u /home/* | sort | tail -1 | awk '{print $1+1;}')
       fi
